@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentMain">
+
+    <fragment
+        android:id="@+id/fragmentGoogleTranslate"
+        android:name="com.example.androidv3.TranslateFragment"
+        android:label="fragment_google_translate"
+        tools:layout="@layout/fragment_translate" />
+    <fragment
+        android:id="@+id/fragmentWords"
+        android:name="com.example.androidv3.SynonymFragment"
+        android:label="fragment_words"
+        tools:layout="@layout/fragment_synonym" />
+    <fragment
+        android:id="@+id/fragmentMain"
+        android:name="com.example.androidv3.HomeFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentGoogleTranslate"
+            app:destination="@id/fragmentGoogleTranslate" />
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentWords"
+            app:destination="@id/fragmentWords" />
+    </fragment>
+</navigation>
