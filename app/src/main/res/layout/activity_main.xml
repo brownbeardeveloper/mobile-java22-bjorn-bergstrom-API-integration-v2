@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="The functions in this app: \n•splash screen \n•translate \n•firebase \n• notifications \n• location \n\nNot done: \n• backstack \n• synonym api"        android:textSize="24sp"
+        android:text="The functions in this app: \n•splash screen \n•translate ml \n•firebase \n•notifications \n•location \n•backstack  \n\nNot done: \n•synonym api"        android:textSize="24sp"
         android:textColor="#333333"
         android:fontFamily="sans-serif-medium"
         android:textStyle="italic"

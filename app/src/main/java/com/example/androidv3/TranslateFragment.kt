@@ -35,7 +35,6 @@ class TranslateFragment : Fragment() {
         val runTranslateBtn = root.findViewById<Button>(R.id.run_translate_btn)
         val inputTextView = root.findViewById<TextView>(R.id.input)
         val outputTextView = root.findViewById<TextView>(R.id.output)
-
         val languageFrom = root.findViewById<AutoCompleteTextView>(R.id.language_from)
         val languageTo = root.findViewById<AutoCompleteTextView>(R.id.language_to)
 
@@ -62,9 +61,7 @@ class TranslateFragment : Fragment() {
 
             val translator = Translation.getClient(options)
 
-            val conditions = DownloadConditions.Builder()
-                .requireWifi()
-                .build()
+            val conditions = DownloadConditions.Builder().requireWifi().build()
 
             translator.downloadModelIfNeeded(conditions)
                 .addOnSuccessListener {
@@ -95,7 +92,7 @@ class TranslateFragment : Fragment() {
 
         val languageFrom = root.findViewById<TextView>(R.id.language_from)
 
-        Log.i("TranslateFragment", "Selected Source Language: ${languageFrom.text.toString()}")
+        Log.i("TranslateFragment", "Selected Source Language: ${languageFrom.text}")
 
         return when (languageFrom.text.toString()){
 
@@ -110,7 +107,7 @@ class TranslateFragment : Fragment() {
 
         val languageTo = root.findViewById<TextView>(R.id.language_to)
 
-        Log.i("TranslateFragment", "Selected Target Language: ${languageTo.text.toString()}")
+        Log.i("TranslateFragment", "Selected Target Language: ${languageTo.text}")
 
         return when (languageTo.text.toString()){
 

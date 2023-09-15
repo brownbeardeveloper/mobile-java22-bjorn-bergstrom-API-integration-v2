@@ -16,7 +16,9 @@ class SynonymFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_synonym, container, false)
 
+        // https://rapidapi.com/dpventures/api/wordsapi/
 
+        // Skipping this part cos I have to use a credit card to get the API key
 
 
         return root

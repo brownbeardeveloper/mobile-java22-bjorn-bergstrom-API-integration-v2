@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentMain">
+    app:startDestination="@id/mainActivity">
 
     <fragment
         android:id="@+id/fragmentGoogleTranslate"
@@ -21,10 +21,29 @@
         android:label="fragment_main"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_fragmentMain_to_fragmentGoogleTranslate"
+            android:id="@+id/action_fragmentMain_to_locationFragment"
+            app:destination="@id/locationFragment" />
+    </fragment>
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.androidv3.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main">
+        <action
+            android:id="@+id/action_fragmentMain_to_fragmentTranslate"
             app:destination="@id/fragmentGoogleTranslate" />
         <action
-            android:id="@+id/action_fragmentMain_to_fragmentWords"
+            android:id="@+id/action_fragmentMain_to_fragmentSynonym"
             app:destination="@id/fragmentWords" />
-    </fragment>
+        <action
+            android:id="@+id/action_activityMain_to_fragmentMain"
+            app:destination="@id/fragmentMain" />
+    </activity>
+
+    <fragment
+        android:id="@+id/locationFragment"
+        android:name="com.example.androidv3.LocationFragment"
+        android:label="fragment_location"
+        tools:layout="@layout/fragment_location" />
 </navigation>

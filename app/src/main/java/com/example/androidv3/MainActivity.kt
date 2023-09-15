@@ -16,6 +16,7 @@ MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Thread.sleep(3000)
         installSplashScreen()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

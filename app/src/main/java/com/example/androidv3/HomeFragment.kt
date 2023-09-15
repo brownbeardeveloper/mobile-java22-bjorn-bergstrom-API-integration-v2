@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
             var ft : FragmentTransaction = fm.beginTransaction()
 
             ft.replace(R.id.nav_host_fragment, LocationFragment(), "location")
-                .addToBackStack("9")
+                .addToBackStack("4")
             ft.commit()
 
         }

@@ -21,6 +21,7 @@ import android.location.Location
 import android.os.Build
 import android.util.Log
 import android.widget.Button
+import androidx.fragment.app.FragmentManager
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
@@ -32,12 +33,13 @@ import java.util.Calendar
 class LocationFragment : Fragment() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var tv_latitude : TextView
-    private lateinit var tv_longitude : TextView
-    private lateinit var bt_location : Button
+    private lateinit var latitudeView : TextView
+    private lateinit var longitudeView : TextView
+    private lateinit var locationBtn : Button
+    private lateinit var backToMainActivityBtn : TextView
 
-    var CHANNEL_ID = "androidv3"
-    var CHANNEL_NAME = "channel"
+    private var CHANNEL_ID = "androidv3"
+    private var CHANNEL_NAME = "channel"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,32 +48,46 @@ class LocationFragment : Fragment() {
 
         var root = inflater.inflate(R.layout.fragment_location, container, false)
 
-        tv_latitude = root.findViewById(R.id.tv_latitude)
-        tv_longitude = root.findViewById(R.id.tv_longitude)
-        bt_location = root.findViewById(R.id.bt_location)
+        latitudeView = root.findViewById(R.id.tv_latitude)
+        longitudeView = root.findViewById(R.id.tv_longitude)
+        locationBtn = root.findViewById(R.id.bt_location)
+        backToMainActivityBtn = root.findViewById(R.id.back_to_main_activity_btn)
 
         initLocationProviderClient()
 
-        bt_location.setOnClickListener {
+        locationBtn.setOnClickListener {
             getUserLocation()
-            createNotificationChannel()
+            getNotification()
+        }
+
+        backToMainActivityBtn.setOnClickListener {
+            cleanBackStack()
         }
 
         return root
     }
 
+    private fun cleanBackStack() {
+
+        val fm: FragmentManager = parentFragmentManager
+        fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+    }
+
     private fun getUserLocation() {
+
         if(ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),1)
-            return
+
+                // Do something here if we have time
 
         } else{
             fusedLocationProviderClient.lastLocation.addOnSuccessListener { location : Location? ->
                 var latitude = location?.latitude.toString()
                 var longitude = location?.longitude.toString()
 
-                tv_latitude.text = latitude
-                tv_longitude.text = longitude
+                latitudeView.text = latitude
+                longitudeView.text = longitude
 
                 sendLocToFirebase(latitude, longitude)
             }
@@ -108,31 +124,29 @@ class LocationFragment : Fragment() {
         rq.add(re)
     }
 
-    private fun createNotificationChannel() {
+    private fun getNotification() {
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        var notificationBuilder : NotificationCompat.Builder? = null
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val notificationChannel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
+        val bitmap : Bitmap = BitmapFactory.decodeResource(resources, R.drawable.liam_neeson_found_you)
+        val intent = Intent(requireContext(), MainActivity::class.java )
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val pendingIntent = PendingIntent.getActivity(requireActivity(), Calendar.getInstance().timeInMillis.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
 
-            var notificationBuilder : NotificationCompat.Builder? = null
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val notificationChannel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance)
-            val bitmap : Bitmap = BitmapFactory.decodeResource(resources, R.drawable.liam_neeson_found_you)
-            val intent = Intent(requireContext(), MainActivity::class.java )
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            val pendingIntent = PendingIntent.getActivity(requireActivity(), Calendar.getInstance().timeInMillis.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
+        val bigPictureNotification = NotificationCompat.BigPictureStyle().bigPicture(bitmap)
+        bigPictureNotification.bigPicture(bitmap)
 
-            val bigPictureNotification = NotificationCompat.BigPictureStyle().bigPicture(bitmap)
-            bigPictureNotification.bigPicture(bitmap)
+        notificationBuilder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+            .setContentTitle("Liam Neeson")
+            .setContentText("I found you, and I will kill you.")
+            .setSmallIcon(R.drawable.translate_icon)
+            .setStyle(bigPictureNotification)
+            .addAction(R.drawable.liam_neeson_found_you, "Show activity", pendingIntent)
 
-            notificationBuilder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
-                .setContentTitle("Liam Neeson")
-                .setContentText("I found you, and I will kill you.")
-                .setSmallIcon(R.drawable.translate_icon)
-                .setStyle(bigPictureNotification)
-                .addAction(R.drawable.liam_neeson_found_you, "Show activity", pendingIntent)
+        val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
+        notificationManager.notify(0, notificationBuilder.build())
 
-            val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(notificationChannel)
-            notificationManager.notify(0, notificationBuilder.build())
-        }
     }
 }
